@@ -23,7 +23,18 @@
                         border: 1px solid black;
                 }
         </style>
+<style>
+            table {
+                border-collapse: collapse;
+                border: 2px black solid;
+                font: 12px sans-serif;
+            }
 
+            td {
+                border: 1px black solid;
+                padding: 5px;
+            }
+        </style>
 </head>
 <body>
 
@@ -143,134 +154,159 @@
     <div class="jumbotron text-center" style="margin-bottom:0">
       <p>This project is Developed for learning purpose.</p>
     </div>
+    <script type="text/javascript"charset="utf-8">
+
+        let brands={};
+        d3.csv("datasets/phone_dataset.csv", function(error,data) {
+            if (error) throw error;
+
+            data.forEach(function(d){
+                // console.log(d.brand)
+                if (d.brand in brands){
+                    brands[d.brand]+=1;
+                }
+                else{
+                    brands[d.brand]=0;
+                }
+            })
+        });
+        console.log(brands)
+
+
+        </script>
     <script type="text/javascript">
 
+
+
         function getMaxObjectValue(this_array, element) {
-	var values = [];
-	for (var i = 0; i < this_array.length; i++) {
-			values.push(Math.ceil(parseFloat(this_array[i][""+element])));
-	}
-	values.sort(function(a,b){return a-b});
-	return values[values.length-1];
-}
-
-function getMinObjectValue(this_array, element) {
-	var values = [];
-	for (var i = 0; i < this_array.length; i++) {
-			values.push(Math.floor(parseFloat(this_array[i][""+element])));
-	}
-	values.sort(function(a,b){return a-b});
-	return values[0];
-}
-            var data = d3.range(10).map(function () {
-                return Math.random();
-            });
-
-
-            var data = [];
-            // this is our data array
-            var startingDate = new Date(2012, 8, 18);
-            // this is a date object. each of our data objects is attached to a date
-            for (var i = 0; i < 10; i++) {
-            // loop 10 times to create 10 data objects
-                var tmpObj 	= {};
-                    // this is a temporary data object
-                tmpObj.date = new Date(startingDate.getFullYear(), startingDate.getMonth(), startingDate.getDate()+i);
-                    // the data for this data object. Increment it from the starting date.
-                tmpObj.DAU 	= Math.round(Math.random() * 300);
-                    // random value. Round it to a whole number.
-                data.push(tmpObj);
-                    // push the object into our data array
+            var values = [];
+            for (var i = 0; i < this_array.length; i++) {
+                    values.push(Math.ceil(parseFloat(this_array[i][""+element])));
             }
+            values.sort(function(a,b){return a-b});
+            return values[values.length-1];
+        }
 
-            var minDate = (data[0].date),
-            maxDate = data[data.length-1].date;
-            minObjectValue = getMinObjectValue(data, 'DAU');
-            maxObjectValue = getMaxObjectValue(data, 'DAU');
+        function getMinObjectValue(this_array, element) {
+            var values = [];
+            for (var i = 0; i < this_array.length; i++) {
+                    values.push(Math.floor(parseFloat(this_array[i][""+element])));
+            }
+            values.sort(function(a,b){return a-b});
+            return values[0];
+        }
 
-            var height = 400;
-            var width = 600;
-	        var margin = {top: 30, right: 10, bottom: 40, left: 60};
-	        width = width - margin.left - margin.right;
-	        height = height - margin.top - margin.bottom;
+        var data = d3.range(10).map(function () {
+            return Math.random();
+        });
+
+
+        var data = [];
+        // this is our data array
+        var startingDate = new Date(2012, 8, 18);
+        // this is a date object. each of our data objects is attached to a date
+        for (var i = 0; i < 10; i++) {
+        // loop 10 times to create 10 data objects
+            var tmpObj 	= {};
+                // this is a temporary data object
+            tmpObj.date = new Date(startingDate.getFullYear(), startingDate.getMonth(), startingDate.getDate()+i);
+                // the data for this data object. Increment it from the starting date.
+            tmpObj.DAU 	= Math.round(Math.random() * 300);
+                // random value. Round it to a whole number.
+            data.push(tmpObj);
+                // push the object into our data array
+        }
+
+        var minDate = (data[0].date),
+        maxDate = data[data.length-1].date;
+        minObjectValue = getMinObjectValue(data, 'DAU');
+        maxObjectValue = getMaxObjectValue(data, 'DAU');
+
+        var height = 400;
+        var width = 600;
+        var margin = {top: 30, right: 10, bottom: 40, left: 60};
+        width = width - margin.left - margin.right;
+        height = height - margin.top - margin.bottom;
+
+        var barPadding = 2;
+        var barSpacing=0.1;
+        var offset=0.3;
+        var speed=200;
+        var delay=200;
+        var barWidth = (width / data.length) - barPadding;
+
+        var yScale = d3.scale.linear()
+            .domain([0, d3.max(data)])
+            .range([0, height]);
+
+        var xScale = d3.scale.ordinal()
+            .domain(data)
+            .rangeBands([0, width], barSpacing, offset);
+
+        var svg = d3.select("#chartarea")
+            .style('width', '100%')
+            .style('height', height + 'px');
+
+        svg.attr("class", "metrics-container")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        var y = d3.scale.linear().domain([ minObjectValue - (.1 * minObjectValue) , maxObjectValue + (.1 * maxObjectValue) ]).range([height, 0]);
+        var x = d3.time.scale().domain([minDate, maxDate]).range([0, width]);
+
+        var yAxis = d3.svg.axis()
+            .scale(y)
+            .orient("left")
+            .ticks(5);
+
+        var xAxis = d3.svg.axis()
+            .scale(x)
+            .orient("bottom")
+            .ticks(5);
+
+        svg.append("g")
+            .attr("class", "axis")
+            .call(yAxis);
+
+        svg.append("g")
+            .attr("class", "axis")
+            .attr("transform", "translate(0," + height + ")")
+            .call(xAxis);
+
+        //add the axes labels
+        svg.append("text")
+            .attr("class", "axis-label")
+            .attr("text-anchor", "end")
+            .attr("x", 20)
+            .attr("y", height + 34)
+            .text('Date');
+
+        svg.append("text")
+            .attr("class", "axis-label")
+            .attr("text-anchor", "end")
+            .attr("y", 6)
+            .attr("dy", "-3.4em")
+            .attr("transform", "rotate(-90)")
+            .text('Daily Active Users');
+
+        var line = d3.svg.line()
+            .x(function(d) { return x(d["date"]); })
+            .y(function(d) { return y(d["DAU"]); })
+
+
+        svg.append("svg:path")
+            .attr("d", line(data))
+            .style("stroke", function() {
+                return "#000000";
+            })
+            .style("fill", "none")
+            .style("stroke-width", "2.5");
 
 
 
 
-            var barPadding = 2;
-            var barSpacing=0.1;
-            var offset=0.3;
-            var speed=200;
-            var delay=200;
-            var barWidth = (width / data.length) - barPadding;
-
-            var yScale = d3.scale.linear()
-                .domain([0, d3.max(data)])
-                .range([0, height]);
-
-            var xScale = d3.scale.ordinal()
-                .domain(data)
-                .rangeBands([0, width], barSpacing, offset);
-
-            var svg = d3.select("#chartarea")
-                .style('width', '100%')
-                .style('height', height + 'px');
-
-            svg.attr("class", "metrics-container")
-                .attr("width", width + margin.left + margin.right)
-                .attr("height", height + margin.top + margin.bottom)
-            .append("g")
-                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-            var y = d3.scale.linear().domain([ minObjectValue - (.1 * minObjectValue) , maxObjectValue + (.1 * maxObjectValue) ]).range([height, 0]);
-	        var x = d3.time.scale().domain([minDate, maxDate]).range([0, width]);
-
-var yAxis = d3.svg.axis()
-		.scale(y)
-		.orient("left")
-		.ticks(5);
-
-	var xAxis = d3.svg.axis()
-		.scale(x)
-		.orient("bottom")
-		.ticks(5);
-
-	svg.append("g")
-	    .attr("class", "axis")
-	    .call(yAxis);
-
-	svg.append("g")
-		.attr("class", "axis")
-	    .attr("transform", "translate(0," + height + ")")
-	    .call(xAxis);
-
-	//add the axes labels
-	svg.append("text")
-	    .attr("class", "axis-label")
-	    .attr("text-anchor", "end")
-	    .attr("x", 20)
-	    .attr("y", height + 34)
-	    .text('Date');
-
-	svg.append("text")
-	    .attr("class", "axis-label")
-	    .attr("text-anchor", "end")
-	    .attr("y", 6)
-	    .attr("dy", "-3.4em")
-	    .attr("transform", "rotate(-90)")
-	    .text('Daily Active Users');
-
-	var line = d3.svg.line()
-		.x(function(d) { return x(d["date"]); })
-		.y(function(d) { return y(d["DAU"]); })
-
-	svg.append("svg:path")
-		.attr("d", line(data))
-		.style("stroke", function() {
-			return "#000000";
-		})
-		.style("fill", "none")
-		.style("stroke-width", "2.5");
 
 		var dataCirclesGroup = svg.append('svg:g');
 
