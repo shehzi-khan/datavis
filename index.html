@@ -322,11 +322,13 @@
 			});
 
 
-		var brands={};
+		var brand_freq={};
 		var frequency_list=[];
         d3.csv("datasets/phone_dataset.csv", function(error,data) {
             if (error) throw error;
 
+            let brands={}
+            let freq=[]
             data.forEach(function(d){
                 // console.log(d.brand)
                 if (d.brand in brands){
@@ -336,17 +338,22 @@
                     brands[d.brand]=0;
                 }
             });
+
+            brand_freq=brands
+
+            for (var key in brands) {
+                if (brands.hasOwnProperty(key)) {
+                    freq.push( {"text":key, "size":brands[key]} );
+                }
+            }
+
+            console.log(freq);
+            // console.log(brands);
             // frequency_list.push({"text":d.brand,})
         });
-        console.log(brands);
+        // console.log(brand_freq);
 
-        for (var key in brands) {
-            if (brands.hasOwnProperty(key)) {
-                frequency_list.push( {"text":key, "size":brands[key]} );
-            }
-        }
 
-        console.log(frequency_list);
 
 
         var color = d3.scale.linear()
