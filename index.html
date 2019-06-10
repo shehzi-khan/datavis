@@ -1,1 +1,377 @@
-My Git site
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>D3 for Data Visualization by Muhammad Abdullah</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.10/c3.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.10/c3.min.js"></script>
+
+    <style type="text/css">
+                #chartarea {
+                        /*height: 400px;*/
+                        /*width: 600px;*/
+                        border: 1px solid black;
+                }
+        </style>
+
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-md bg-dark navbar-dark">
+        <img src="images/digital.png" style="height: 50px">
+      <a class="navbar-brand" href="#">D3 for Data Visualization</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="collapsibleNavbar">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="#">Documentation</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Presentation</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">About</a>
+          </li>
+
+        </ul>
+      </div>
+    </nav>
+
+    <div class="row"  style="margin: 10px">
+       <div class="container-fluid">
+        <div class="col bg-light d-flex " id="slides_container" style="margin-top:20px;margin-bottom:20px;height: 200px;overflow-y: auto">
+             <div class="col-2" data-toggle="modal" data-target="#visModal">
+                <div class="card card-block d-flex flex-wrap justify-content-center align-content-center" style="margin-top: 20px;height: 150px;">
+                    <i class="fa fa-plus text-muted" style="font-size:75px"></i>
+                </div>
+             </div>
+        </div>
+       </div>
+    </div>
+    <div class="row" style="margin: 30px">
+
+            <div class="col-5" id="preview_container">
+                <div class="row">
+                    <div class="col-3">
+                        <h3>Preview</h3>
+                    </div>
+                    <div class="col-8 text-right" id="btnAnimated">
+                        <input name="updateButton" type="button" value="Replay" align="right" onclick="load_bars()" />
+                    </div>
+                </div>
+                <div class="row">
+                    <svg id="chartarea"></svg>
+                </div>
+            </div>
+            <div class="col-3">
+                <h3>Settings</h3>
+                <div id="btnUpdate">
+                    <input name="updateButton" type="button" value="Update" align="right" onclick="test2()" />
+                </div>
+            </div>
+            <div id="chart" >
+
+            </div>
+
+    </div>
+    <br>
+    <br>
+
+    <!-- Visualization Selection Dialogue -->
+  <div class="modal" id="visModal">
+    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg">
+      <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Select Visualization Style</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+
+        <!-- Modal body -->
+
+        <div class="modal-body" >
+            <div class="container">
+               <div class="container-fluid">
+                   <div class="row">
+                        <div class="col-sm-4">
+                            <div class="card-deck">
+                              <div class="card bg-light">
+                                    <img class="card-img-top" src="images/line-graph-icon.png" alt="Card image">
+                                    <div class="card-body text-center">
+                                      <h4 class="card-title">Line Graph</h4>
+                                    </div>
+                              </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                              <div class="card bg-light">
+                                    <img class="card-img-top" src="images/bar-chart-icon.png"  alt="Card image">
+                                    <div class="card-body text-center">
+                                      <h4 class="card-title">Bar Chart</h4>
+                                    </div>
+                              </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+
+    <div class="jumbotron text-center" style="margin-bottom:0">
+      <p>This project is Developed for learning purpose.</p>
+    </div>
+    <script type="text/javascript">
+
+        function getMaxObjectValue(this_array, element) {
+	var values = [];
+	for (var i = 0; i < this_array.length; i++) {
+			values.push(Math.ceil(parseFloat(this_array[i][""+element])));
+	}
+	values.sort(function(a,b){return a-b});
+	return values[values.length-1];
+}
+
+function getMinObjectValue(this_array, element) {
+	var values = [];
+	for (var i = 0; i < this_array.length; i++) {
+			values.push(Math.floor(parseFloat(this_array[i][""+element])));
+	}
+	values.sort(function(a,b){return a-b});
+	return values[0];
+}
+            var data = d3.range(10).map(function () {
+                return Math.random();
+            });
+
+
+            var data = [];
+            // this is our data array
+            var startingDate = new Date(2012, 8, 18);
+            // this is a date object. each of our data objects is attached to a date
+            for (var i = 0; i < 10; i++) {
+            // loop 10 times to create 10 data objects
+                var tmpObj 	= {};
+                    // this is a temporary data object
+                tmpObj.date = new Date(startingDate.getFullYear(), startingDate.getMonth(), startingDate.getDate()+i);
+                    // the data for this data object. Increment it from the starting date.
+                tmpObj.DAU 	= Math.round(Math.random() * 300);
+                    // random value. Round it to a whole number.
+                data.push(tmpObj);
+                    // push the object into our data array
+            }
+
+            var minDate = (data[0].date),
+            maxDate = data[data.length-1].date;
+            minObjectValue = getMinObjectValue(data, 'DAU');
+            maxObjectValue = getMaxObjectValue(data, 'DAU');
+
+            var height = 400;
+            var width = 600;
+	        var margin = {top: 30, right: 10, bottom: 40, left: 60};
+	        width = width - margin.left - margin.right;
+	        height = height - margin.top - margin.bottom;
+
+
+
+
+            var barPadding = 2;
+            var barSpacing=0.1;
+            var offset=0.3;
+            var speed=200;
+            var delay=200;
+            var barWidth = (width / data.length) - barPadding;
+
+            var yScale = d3.scale.linear()
+                .domain([0, d3.max(data)])
+                .range([0, height]);
+
+            var xScale = d3.scale.ordinal()
+                .domain(data)
+                .rangeBands([0, width], barSpacing, offset);
+
+            var svg = d3.select("#chartarea")
+                .style('width', '100%')
+                .style('height', height + 'px');
+
+            svg.attr("class", "metrics-container")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+            var y = d3.scale.linear().domain([ minObjectValue - (.1 * minObjectValue) , maxObjectValue + (.1 * maxObjectValue) ]).range([height, 0]);
+	        var x = d3.time.scale().domain([minDate, maxDate]).range([0, width]);
+
+var yAxis = d3.svg.axis()
+		.scale(y)
+		.orient("left")
+		.ticks(5);
+
+	var xAxis = d3.svg.axis()
+		.scale(x)
+		.orient("bottom")
+		.ticks(5);
+
+	svg.append("g")
+	    .attr("class", "axis")
+	    .call(yAxis);
+
+	svg.append("g")
+		.attr("class", "axis")
+	    .attr("transform", "translate(0," + height + ")")
+	    .call(xAxis);
+
+	//add the axes labels
+	svg.append("text")
+	    .attr("class", "axis-label")
+	    .attr("text-anchor", "end")
+	    .attr("x", 20)
+	    .attr("y", height + 34)
+	    .text('Date');
+
+	svg.append("text")
+	    .attr("class", "axis-label")
+	    .attr("text-anchor", "end")
+	    .attr("y", 6)
+	    .attr("dy", "-3.4em")
+	    .attr("transform", "rotate(-90)")
+	    .text('Daily Active Users');
+
+	var line = d3.svg.line()
+		.x(function(d) { return x(d["date"]); })
+		.y(function(d) { return y(d["DAU"]); })
+
+	svg.append("svg:path")
+		.attr("d", line(data))
+		.style("stroke", function() {
+			return "#000000";
+		})
+		.style("fill", "none")
+		.style("stroke-width", "2.5");
+
+		var dataCirclesGroup = svg.append('svg:g');
+
+		var circles = dataCirclesGroup.selectAll('.data-point')
+			.data(data);
+
+		circles
+			.enter()
+			.append('svg:circle')
+			.attr('class', 'dot')
+			.attr('fill', function() { return "red"; })
+			.attr('cx', function(d) { return x(d["date"]); })
+			.attr('cy', function(d) { return y(d["DAU"]); })
+			.attr('r', function() { return 3; })
+			.on("mouseover", function(d) {
+  				d3.select(this)
+					.attr("r", 8)
+					.attr("class", "dot-selected")
+					.transition()
+      					.duration(750);
+			})
+			.on("mouseout", function(d) {
+  				d3.select(this)
+					.attr("r", 3)
+					.attr("class", "dot")
+					.transition()
+      					.duration(750);
+			});
+
+
+            function update(){
+                svg.selectAll('rect').attr("fill", function (d, i) {
+                        return 'rgb(150, ' + Math.round(i * 20) + ', ' + i + ')'
+                    })
+            }
+
+            function load_bars() {
+
+                svg.selectAll('rect').remove();
+
+                var path=svg.selectAll('rect').data(data, function(d) { return d; });
+
+
+                path.enter()
+                    .append('rect')
+                    .attr('class', 'bar')
+                    .attr("x", function (d, i) {
+                        return xScale(d);
+                    })
+                    .attr("y", function (d, i) {
+                        return height;
+                    })
+                    .attr("width", function (d, i) {
+                        return xScale.rangeBand()
+                    })
+                    .attr("fill", function (d, i) {
+                        return 'rgb(256, ' + Math.round(i / 2) + ', ' + i + ')'
+                    })
+                    .attr("height", 0);
+
+                path.transition()
+                    .duration(speed)
+                    .delay(function (d, i) {
+                        return i * delay;
+                    })
+                    .attr("y", function (d, i) {
+                        return height - yScale(d);
+                    })
+                    .attr("height", function (d, i) {
+                        return yScale(d);
+                    });
+
+
+            }
+
+
+            function test2() {
+                var chart = c3.generate({
+                    data: {
+                        columns: [
+                            ['data1', 30, 200, 100, 400, 150, 250],
+                            ['data2', 50, 20, 10, 40, 15, 25]
+                        ],
+                        type: 'bar'
+                    },
+                    transition: {
+                        duration: 1000
+                    },
+                    bar: {
+                        width: {
+                            ratio: 0.5 // this makes bar width 50% of length between ticks
+                        }
+                        // or
+                        //width: 100 // this makes bar width 100px
+                    }
+                });
+            }
+
+
+
+        </script>
+</body>
+
+</html>
