@@ -61,7 +61,7 @@ class Query():
                 'message': "data object contains a list of JSON objects containing data field's name and count of matching records"
             }
 
-            resp.body = json.dumps(result)
+            resp.body = json.dump(result)
 
         except Exception as e:
             resp.body = json.dumps({'status': 'Error', 'message': e.message, 'details': str(e)})
