@@ -4,6 +4,7 @@ import falcon
 from falcon_cors import CORS
 import pymongo
 import json
+from bson.json_util import dumps
 
 cors = CORS(allow_all_origins= True,allow_credentials_all_origins=True,allow_all_headers=True,allow_all_methods=True,allow_origins_list=['http://localhost:63342','http://localhost:5000', 'http://210.107.233.174:5000'])
 
@@ -50,18 +51,16 @@ class Query():
             for param in req.params:
                 query[param]=req.params[param]
 
-            for x in collection.find(query):
-
-                data.append(dict(x))
+            data= collection.find(query)
 
             result = {
                 'status': 'success',
                 'data': data,
-                'count':len(data),
+                'count':data.count(),
                 'message': "data object contains a list of JSON objects containing data field's name and count of matching records"
             }
 
-            resp.body = json.dump(result)
+            resp.body = dumps(result)
 
         except Exception as e:
             resp.body = json.dumps({'status': 'Error', 'message': e.message, 'details': str(e)})
