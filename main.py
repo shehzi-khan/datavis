@@ -50,12 +50,12 @@ class Query():
             for param in req.params:
                 query[param]=req.params[param]
 
-            data=collection.find(query)
+            data=list(collection.find(query))
 
             result = {
                 'status': 'success',
                 'data': data,
-                'count':len(list(data)),
+                'count':len(data),
                 'message': "data object contains a list of JSON objects containing data field's name and count of matching records"
             }
 
