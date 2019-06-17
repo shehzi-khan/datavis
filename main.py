@@ -71,4 +71,6 @@ class Query():
 
 api = falcon.API(middleware=[cors.middleware])
 api.add_route('/distribution', Distribution())
+api.add_route('/query', Query())
+
 
