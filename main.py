@@ -50,7 +50,8 @@ class Query():
             for param in req.params:
                 query[param]=req.params[param]
 
-            data=list(collection.find(query))
+            for x in collection.find(query):
+                data.append(x)
 
             result = {
                 'status': 'success',
