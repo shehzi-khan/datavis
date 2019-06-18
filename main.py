@@ -53,8 +53,11 @@ class Count():
                 for i, x in enumerate(collection.find().distinct(field)):
                     data[field].append(x)
                     data["count"].append(collection.find({field: x}).count())
+
+                data[field], data["count"] = zip(*sorted(zip(data[field], data["count"])))
             else:
                 data.append({"name": ["Total"], "count": [collection.find().count()]})
+
 
             result={
                 'status': 'success',
