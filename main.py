@@ -79,17 +79,19 @@ class Dist():
         try:
             all={}
 
+
             find_result=collection.find()
             for field in find_result.keys():
-                data = {}
-                data[field]=[]
-                data["count"]=['units']
-                for i, x in enumerate(collection.find().distinct(field)):
-                    data[field].append(x)
-                    data["count"].append(collection.find({field: x}).count())
+                if field not in all.keys():
+                    data = {}
+                    data[field]=[]
+                    data["count"]=['units']
+                    for i, x in enumerate(collection.find().distinct(field)):
+                        data[field].append(x)
+                        data["count"].append(collection.find({field: x}).count())
 
-                data["count"][1:],data[field] = zip(*sorted(zip(data["count"][1:],data[field]),reverse=True))
-                all[field]=data
+                    data["count"][1:],data[field] = zip(*sorted(zip(data["count"][1:],data[field]),reverse=True))
+                    all[field]=data
             # else:
             #     data.append({"name": ["Total"], "count": [collection.find().count()]})
 
