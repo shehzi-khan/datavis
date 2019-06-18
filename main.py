@@ -80,9 +80,9 @@ class Dist():
             all={}
 
 
-            find_result=collection.find()
-            for field in collection.keys():
-                if field not in all.keys():
+            # find_result=collection.find()
+            for field in collection.find_one().keys():
+                if field is not "_id":
                     data = {}
                     data[field]=[]
                     data["count"]=['units']
