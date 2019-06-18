@@ -49,7 +49,7 @@ class Count():
             if 'field' in req.params:
                 field=req.params['field']
                 data[field]=[]
-                data["count"]=[]
+                data["count"]=['units']
                 for i, x in enumerate(collection.find().distinct(field)):
                     data[field].append(x)
                     data["count"].append(collection.find({field: x}).count())
