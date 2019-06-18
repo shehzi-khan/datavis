@@ -36,7 +36,7 @@
             }
         </style>
 </head>
-<body>
+<body onload="get_brands()">
 
     <nav class="navbar navbar-expand-md bg-dark navbar-dark">
         <img src="images/digital.png" style="height: 50px">
@@ -79,10 +79,10 @@
                         <h3>Preview</h3>
                     </div>
                     <div class="col-8 text-right" id="btnAnimated">
-                        <input name="updateButton" type="button" value="Replay" align="right" onclick="load_bars()" />
+                        <input name="updateButton" type="button" value="Replay" align="right" onclick="test3()" />
                     </div>
                 </div>
-                <div class="row">
+                <div id="chart" class="row">
                     <svg id="chartarea"></svg>
                 </div>
             </div>
@@ -92,7 +92,7 @@
                     <input name="updateButton" type="button" value="Update" align="right" onclick="test2()" />
                 </div>
             </div>
-            <div id="chart" >
+            <!--<div id="chart" >-->
 
             </div>
 
@@ -154,292 +154,358 @@
     <div class="jumbotron text-center" style="margin-bottom:0">
       <p>This project is Developed for learning purpose.</p>
     </div>
-    <script type="text/javascript"charset="utf-8">
 
-
-
-        </script>
     <script type="text/javascript">
 
 
+/*
+        // function getMaxObjectValue(this_array, element) {
+        //     var values = [];
+        //     for (var i = 0; i < this_array.length; i++) {
+        //             values.push(Math.ceil(parseFloat(this_array[i][""+element])));
+        //     }
+        //     values.sort(function(a,b){return a-b});
+        //     return values[values.length-1];
+        // }
+        //
+        // function getMinObjectValue(this_array, element) {
+        //     var values = [];
+        //     for (var i = 0; i < this_array.length; i++) {
+        //             values.push(Math.floor(parseFloat(this_array[i][""+element])));
+        //     }
+        //     values.sort(function(a,b){return a-b});
+        //     return values[0];
+        // }
+        //
+        // var data = d3.range(10).map(function () {
+        //     return Math.random();
+        // });
+        //
+        //
+        // var data = [];
+        // // this is our data array
+        // var startingDate = new Date(2012, 8, 18);
+        // // this is a date object. each of our data objects is attached to a date
+        // for (var i = 0; i < 10; i++) {
+        // // loop 10 times to create 10 data objects
+        //     var tmpObj 	= {};
+        //         // this is a temporary data object
+        //     tmpObj.date = new Date(startingDate.getFullYear(), startingDate.getMonth(), startingDate.getDate()+i);
+        //         // the data for this data object. Increment it from the starting date.
+        //     tmpObj.DAU 	= Math.round(Math.random() * 300);
+        //         // random value. Round it to a whole number.
+        //     data.push(tmpObj);
+        //         // push the object into our data array
+        // }
+        //
+        // var minDate = (data[0].date),
+        // maxDate = data[data.length-1].date;
+        // minObjectValue = getMinObjectValue(data, 'DAU');
+        // maxObjectValue = getMaxObjectValue(data, 'DAU');
+        //
+        // var height = 400;
+        // var width = 600;
+        // var margin = {top: 30, right: 10, bottom: 40, left: 60};
+        // width = width - margin.left - margin.right;
+        // height = height - margin.top - margin.bottom;
+        //
+        // var barPadding = 2;
+        // var barSpacing=0.1;
+        // var offset=0.3;
+        // var speed=200;
+        // var delay=200;
+        // var barWidth = (width / data.length) - barPadding;
+        //
+        // var yScale = d3.scale.linear()
+        //     .domain([0, d3.max(data)])
+        //     .range([0, height]);
+        //
+        // var xScale = d3.scale.ordinal()
+        //     .domain(data)
+        //     .rangeBands([0, width], barSpacing, offset);
+        //
+        // var svg = d3.select("#chartarea")
+        //     .style('width', '100%')
+        //     .style('height', height + 'px');
+        //
+        // svg.attr("class", "metrics-container")
+        //     .attr("width", width + margin.left + margin.right)
+        //     .attr("height", height + margin.top + margin.bottom)
+        // .append("g")
+        //     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+        //
+        // var y = d3.scale.linear().domain([ minObjectValue - (.1 * minObjectValue) , maxObjectValue + (.1 * maxObjectValue) ]).range([height, 0]);
+        // var x = d3.time.scale().domain([minDate, maxDate]).range([0, width]);
 
-        function getMaxObjectValue(this_array, element) {
-            var values = [];
-            for (var i = 0; i < this_array.length; i++) {
-                    values.push(Math.ceil(parseFloat(this_array[i][""+element])));
+        // var yAxis = d3.svg.axis()
+        //     .scale(y)
+        //     .orient("left")
+        //     .ticks(5);
+        //
+        // var xAxis = d3.svg.axis()
+        //     .scale(x)
+        //     .orient("bottom")
+        //     .ticks(5);
+        //
+        // svg.append("g")
+        //     .attr("class", "axis")
+        //     .call(yAxis);
+
+        // svg.append("g")
+        //     .attr("class", "axis")
+        //     .attr("transform", "translate(0," + height + ")")
+        //     .call(xAxis);
+        //
+        // //add the axes labels
+        // svg.append("text")
+        //     .attr("class", "axis-label")
+        //     .attr("text-anchor", "end")
+        //     .attr("x", 20)
+        //     .attr("y", height + 34)
+        //     .text('Date');
+        //
+        // svg.append("text")
+        //     .attr("class", "axis-label")
+        //     .attr("text-anchor", "end")
+        //     .attr("y", 6)
+        //     .attr("dy", "-3.4em")
+        //     .attr("transform", "rotate(-90)")
+        //     .text('Daily Active Users');
+        //
+        // var line = d3.svg.line()
+        //     .x(function(d) { return x(d["date"]); })
+        //     .y(function(d) { return y(d["DAU"]); })
+        //
+        //
+        // svg.append("svg:path")
+        //     .attr("d", line(data))
+        //     .style("stroke", function() {
+        //         return "#000000";
+        //     })
+        //     .style("fill", "none")
+        //     .style("stroke-width", "2.5");
+
+
+
+
+        //
+		// var dataCirclesGroup = svg.append('svg:g');
+        //
+		// var circles = dataCirclesGroup.selectAll('.data-point')
+		// 	.data(data);
+        //
+		// circles
+		// 	.enter()
+		// 	.append('svg:circle')
+		// 	.attr('class', 'dot')
+		// 	.attr('fill', function() { return "red"; })
+		// 	.attr('cx', function(d) { return x(d["date"]); })
+		// 	.attr('cy', function(d) { return y(d["DAU"]); })
+		// 	.attr('r', function() { return 3; })
+		// 	.on("mouseover", function(d) {
+  		// 		d3.select(this)
+		// 			.attr("r", 8)
+		// 			.attr("class", "dot-selected")
+		// 			.transition()
+      	// 				.duration(750);
+		// 	})
+		// 	.on("mouseout", function(d) {
+  		// 		d3.select(this)
+		// 			.attr("r", 3)
+		// 			.attr("class", "dot")
+		// 			.transition()
+      	// 				.duration(750);
+		// 	});
+
+
+		// var brand_freq={};
+		// var frequency_list=[];
+        // d3.csv("datasets/phone_dataset.csv", function(error,data) {
+        //     if (error) throw error;
+        //
+        //     let brands={}
+        //     let freq=[]
+        //     data.forEach(function(d){
+        //         // console.log(d.brand)
+        //         if (d.brand in brands){
+        //             brands[d.brand]+=1;
+        //         }
+        //         else{
+        //             brands[d.brand]=0;
+        //         }
+        //     });
+        //
+        //     brand_freq=brands
+        //
+        //     for (var key in brands) {
+        //         if (brands.hasOwnProperty(key)) {
+        //             freq.push( {"text":key, "size":brands[key]} );
+        //         }
+        //     }
+        //
+        //     console.log(freq);
+        //     // console.log(brands);
+        //     // frequency_list.push({"text":d.brand,})
+        // });
+        // // console.log(brand_freq);
+
+
+
+
+        // var color = d3.scale.linear()
+        //     .domain([0,1,2,3,4,5,6,10,15,20,100])
+        //     .range(["#ddd", "#ccc", "#bbb", "#aaa", "#999", "#888", "#777", "#666", "#555", "#444", "#333", "#222"]);
+        //
+        // d3.layout.cloud().size([800, 300])
+        //         .words(frequency_list)
+        //         .rotate(0)
+        //         .fontSize(function(d) { return d.size; })
+        //         .on("end", draw)
+        //         .start();
+        //
+        // function draw(words) {
+        //     svg
+        //             .attr("width", 850)
+        //             .attr("height", 350)
+        //             .attr("class", "wordcloud")
+        //             .append("g")
+        //             // without the transform, words words would get cutoff to the left and top, they would
+        //             // appear outside of the SVG area
+        //             .attr("transform", "translate(320,200)")
+        //             .selectAll("text")
+        //             .data(words)
+        //             .enter().append("text")
+        //             .style("font-size", function(d) { return d.size + "px"; })
+        //             .style("fill", function(d, i) { return color(i); })
+        //             .attr("transform", function(d) {
+        //                 return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+        //             })
+        //             .text(function(d) { return d.text; });
+        // }
+
+
+
+            // function update(){
+            //     svg.selectAll('rect').attr("fill", function (d, i) {
+            //             return 'rgb(150, ' + Math.round(i * 20) + ', ' + i + ')'
+            //         })
+            // }
+            //
+            // function load_bars() {
+            //
+            //     svg.selectAll('rect').remove();
+            //
+            //     var path=svg.selectAll('rect').data(data, function(d) { return d; });
+            //
+            //
+            //     path.enter()
+            //         .append('rect')
+            //         .attr('class', 'bar')
+            //         .attr("x", function (d, i) {
+            //             return xScale(d);
+            //         })
+            //         .attr("y", function (d, i) {
+            //             return height;
+            //         })
+            //         .attr("width", function (d, i) {
+            //             return xScale.rangeBand()
+            //         })
+            //         .attr("fill", function (d, i) {
+            //             return 'rgb(256, ' + Math.round(i / 2) + ', ' + i + ')'
+            //         })
+            //         .attr("height", 0);
+            //
+            //     path.transition()
+            //         .duration(speed)
+            //         .delay(function (d, i) {
+            //             return i * delay;
+            //         })
+            //         .attr("y", function (d, i) {
+            //             return height - yScale(d);
+            //         })
+            //         .attr("height", function (d, i) {
+            //             return yScale(d);
+            //         });
+            //
+            //
+            // }
+            //
+
+*/
+
+            var colorScale = d3.scale.category10();
+
+            function get_brands() {
+                const data={field:"brand"};
+                $.ajax({
+                    url:'http://www.shehzikhan.ml:5000/distribution',
+                    type:"GET",
+                    data:data,
+                    // dataType:json,
+                    success:function (result) {
+                        test2(result)
+                    },
+                    error:function (error) {
+                        console.log(`Error ${error}`)
+
+                    }
+                })
+
             }
-            values.sort(function(a,b){return a-b});
-            return values[values.length-1];
-        }
 
-        function getMinObjectValue(this_array, element) {
-            var values = [];
-            for (var i = 0; i < this_array.length; i++) {
-                    values.push(Math.floor(parseFloat(this_array[i][""+element])));
-            }
-            values.sort(function(a,b){return a-b});
-            return values[0];
-        }
+            function test2(result) {
+                var chart = c3.generate({
+                    bindto:'#chart',
+                    data: {
+                        // x:'x',
+                        columns: [
+                            [50, 20, 10, 40, 15, 45]
+                        ],
+                        groups: [
+                          ['count']
+                        ],
+                        type:'bar',
+                        types: {brand:'bar',count:'bar'},
+                        color: function(inColor, data) {
+                              if(data.index !== undefined) {
+                                return colorScale(data.index);
+                              }
 
-        var data = d3.range(10).map(function () {
-            return Math.random();
-        });
+                              return inColor;
+                        },
+                    },
 
+                    axis:{
+                        rotated:false,
+                        x:{
+                            type: 'category',
+                            categories:['cat1','cat2','cat3','cat4','cat5','cat6'],
 
-        var data = [];
-        // this is our data array
-        var startingDate = new Date(2012, 8, 18);
-        // this is a date object. each of our data objects is attached to a date
-        for (var i = 0; i < 10; i++) {
-        // loop 10 times to create 10 data objects
-            var tmpObj 	= {};
-                // this is a temporary data object
-            tmpObj.date = new Date(startingDate.getFullYear(), startingDate.getMonth(), startingDate.getDate()+i);
-                // the data for this data object. Increment it from the starting date.
-            tmpObj.DAU 	= Math.round(Math.random() * 300);
-                // random value. Round it to a whole number.
-            data.push(tmpObj);
-                // push the object into our data array
-        }
-
-        var minDate = (data[0].date),
-        maxDate = data[data.length-1].date;
-        minObjectValue = getMinObjectValue(data, 'DAU');
-        maxObjectValue = getMaxObjectValue(data, 'DAU');
-
-        var height = 400;
-        var width = 600;
-        var margin = {top: 30, right: 10, bottom: 40, left: 60};
-        width = width - margin.left - margin.right;
-        height = height - margin.top - margin.bottom;
-
-        var barPadding = 2;
-        var barSpacing=0.1;
-        var offset=0.3;
-        var speed=200;
-        var delay=200;
-        var barWidth = (width / data.length) - barPadding;
-
-        var yScale = d3.scale.linear()
-            .domain([0, d3.max(data)])
-            .range([0, height]);
-
-        var xScale = d3.scale.ordinal()
-            .domain(data)
-            .rangeBands([0, width], barSpacing, offset);
-
-        var svg = d3.select("#chartarea")
-            .style('width', '100%')
-            .style('height', height + 'px');
-
-        svg.attr("class", "metrics-container")
-            .attr("width", width + margin.left + margin.right)
-            .attr("height", height + margin.top + margin.bottom)
-        .append("g")
-            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-        var y = d3.scale.linear().domain([ minObjectValue - (.1 * minObjectValue) , maxObjectValue + (.1 * maxObjectValue) ]).range([height, 0]);
-        var x = d3.time.scale().domain([minDate, maxDate]).range([0, width]);
-
-        var yAxis = d3.svg.axis()
-            .scale(y)
-            .orient("left")
-            .ticks(5);
-
-        var xAxis = d3.svg.axis()
-            .scale(x)
-            .orient("bottom")
-            .ticks(5);
-
-        svg.append("g")
-            .attr("class", "axis")
-            .call(yAxis);
-
-        svg.append("g")
-            .attr("class", "axis")
-            .attr("transform", "translate(0," + height + ")")
-            .call(xAxis);
-
-        //add the axes labels
-        svg.append("text")
-            .attr("class", "axis-label")
-            .attr("text-anchor", "end")
-            .attr("x", 20)
-            .attr("y", height + 34)
-            .text('Date');
-
-        svg.append("text")
-            .attr("class", "axis-label")
-            .attr("text-anchor", "end")
-            .attr("y", 6)
-            .attr("dy", "-3.4em")
-            .attr("transform", "rotate(-90)")
-            .text('Daily Active Users');
-
-        var line = d3.svg.line()
-            .x(function(d) { return x(d["date"]); })
-            .y(function(d) { return y(d["DAU"]); })
-
-
-        svg.append("svg:path")
-            .attr("d", line(data))
-            .style("stroke", function() {
-                return "#000000";
-            })
-            .style("fill", "none")
-            .style("stroke-width", "2.5");
-
-
-
-
-
-		var dataCirclesGroup = svg.append('svg:g');
-
-		var circles = dataCirclesGroup.selectAll('.data-point')
-			.data(data);
-
-		circles
-			.enter()
-			.append('svg:circle')
-			.attr('class', 'dot')
-			.attr('fill', function() { return "red"; })
-			.attr('cx', function(d) { return x(d["date"]); })
-			.attr('cy', function(d) { return y(d["DAU"]); })
-			.attr('r', function() { return 3; })
-			.on("mouseover", function(d) {
-  				d3.select(this)
-					.attr("r", 8)
-					.attr("class", "dot-selected")
-					.transition()
-      					.duration(750);
-			})
-			.on("mouseout", function(d) {
-  				d3.select(this)
-					.attr("r", 3)
-					.attr("class", "dot")
-					.transition()
-      					.duration(750);
-			});
-
-
-		var brand_freq={};
-		var frequency_list=[];
-        d3.csv("datasets/phone_dataset.csv", function(error,data) {
-            if (error) throw error;
-
-            let brands={}
-            let freq=[]
-            data.forEach(function(d){
-                // console.log(d.brand)
-                if (d.brand in brands){
-                    brands[d.brand]+=1;
-                }
-                else{
-                    brands[d.brand]=0;
-                }
-            });
-
-            brand_freq=brands
-
-            for (var key in brands) {
-                if (brands.hasOwnProperty(key)) {
-                    freq.push( {"text":key, "size":brands[key]} );
-                }
+                        }
+                    }
+                    ,
+                    size:{
+                        width:600,
+                        head:400
+                    },
+                    transition: {
+                        duration: 1000
+                    },
+                    bar: {
+                        width: {
+                            ratio: 0.5 // this makes bar width 50% of length between ticks
+                        }
+                        // or
+                        //width: 100 // this makes bar width 100px
+                    }
+                });
             }
 
-            console.log(freq);
-            // console.log(brands);
-            // frequency_list.push({"text":d.brand,})
-        });
-        // console.log(brand_freq);
-
-
-
-
-        var color = d3.scale.linear()
-            .domain([0,1,2,3,4,5,6,10,15,20,100])
-            .range(["#ddd", "#ccc", "#bbb", "#aaa", "#999", "#888", "#777", "#666", "#555", "#444", "#333", "#222"]);
-
-        d3.layout.cloud().size([800, 300])
-                .words(frequency_list)
-                .rotate(0)
-                .fontSize(function(d) { return d.size; })
-                .on("end", draw)
-                .start();
-
-        function draw(words) {
-            svg
-                    .attr("width", 850)
-                    .attr("height", 350)
-                    .attr("class", "wordcloud")
-                    .append("g")
-                    // without the transform, words words would get cutoff to the left and top, they would
-                    // appear outside of the SVG area
-                    .attr("transform", "translate(320,200)")
-                    .selectAll("text")
-                    .data(words)
-                    .enter().append("text")
-                    .style("font-size", function(d) { return d.size + "px"; })
-                    .style("fill", function(d, i) { return color(i); })
-                    .attr("transform", function(d) {
-                        return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
-                    })
-                    .text(function(d) { return d.text; });
-        }
-
-
-
-            function update(){
-                svg.selectAll('rect').attr("fill", function (d, i) {
-                        return 'rgb(150, ' + Math.round(i * 20) + ', ' + i + ')'
-                    })
-            }
-
-            function load_bars() {
-
-                svg.selectAll('rect').remove();
-
-                var path=svg.selectAll('rect').data(data, function(d) { return d; });
-
-
-                path.enter()
-                    .append('rect')
-                    .attr('class', 'bar')
-                    .attr("x", function (d, i) {
-                        return xScale(d);
-                    })
-                    .attr("y", function (d, i) {
-                        return height;
-                    })
-                    .attr("width", function (d, i) {
-                        return xScale.rangeBand()
-                    })
-                    .attr("fill", function (d, i) {
-                        return 'rgb(256, ' + Math.round(i / 2) + ', ' + i + ')'
-                    })
-                    .attr("height", 0);
-
-                path.transition()
-                    .duration(speed)
-                    .delay(function (d, i) {
-                        return i * delay;
-                    })
-                    .attr("y", function (d, i) {
-                        return height - yScale(d);
-                    })
-                    .attr("height", function (d, i) {
-                        return yScale(d);
-                    });
-
-
-            }
-
-
-            function test2() {
+            function test3() {
                 var chart = c3.generate({
                     data: {
                         columns: [
-                            ['data1', 30, 200, 100, 400, 150, 250],
+                            ['data1', 30, 200, 100, 400, 150, 400],
                             ['data2', 50, 20, 10, 40, 15, 25]
                         ],
                         type: 'bar'
@@ -456,6 +522,7 @@
                     }
                 });
             }
+
 
 
 
