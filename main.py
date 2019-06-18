@@ -109,6 +109,46 @@ class Dist():
             resp.body = json.dumps({'status': 'Error', 'message': e.message, 'details': str(e)})
 
 
+class Categories():
+    def __init__(self):
+        self.name='Data Field Distribution API'
+
+    def on_get(self, req, resp):
+        try:
+            # all={}
+
+
+            # find_result=collection.find()
+            data = collection.find_one().keys()
+
+                # if field is not "_id":
+                #     data = {}
+                #     data[field]=[]
+                #     data["count"]=['units']
+                #     for i, x in enumerate(collection.find().distinct(field)):
+                #         data[field].append(x)
+                #         data["count"].append(collection.find({field: x}).count())
+                #
+                #     data["count"][1:],data[field] = zip(*sorted(zip(data["count"][1:],data[field]),reverse=True))
+                #     all[field]=data
+            # else:
+            #     data.append({"name": ["Total"], "count": [collection.find().count()]})
+
+
+            result={
+                'status': 'success',
+                'data': data,
+                # 'count':len(data),
+                'message': "data object contains a list of JSON objects containing data field's name and count of matching records"
+            }
+
+            resp.body=json.dumps(result)
+
+        except Exception as e:
+            resp.body = json.dumps({'status': 'Error', 'message': e.message, 'details': str(e)})
+
+
+
 class Query():
     def __init__(self):
         self.name = 'Query API'
