@@ -98,7 +98,7 @@ class Dist():
 
             result={
                 'status': 'success',
-                'data': data,
+                'data': all,
                 # 'count':len(data),
                 'message': "data object contains a list of JSON objects containing data field's name and count of matching records"
             }
