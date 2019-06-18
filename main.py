@@ -81,7 +81,7 @@ class Dist():
 
 
             find_result=collection.find()
-            for field in find_result.keys():
+            for field in collection.keys():
                 if field not in all.keys():
                     data = {}
                     data[field]=[]
