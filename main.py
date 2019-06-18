@@ -54,7 +54,7 @@ class Count():
                     data[field].append(x)
                     data["count"].append(collection.find({field: x}).count())
 
-                data[field], data["count"] = zip(*sorted(zip(data[field], data["count"])))
+                data["count"],data[field] = zip(*sorted(zip(data["count"],data[field])))
             else:
                 data.append({"name": ["Total"], "count": [collection.find().count()]})
 
